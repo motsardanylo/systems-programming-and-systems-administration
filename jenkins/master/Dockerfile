@@ -1,0 +1,13 @@
+# jenkins/master/Dockerfile
+FROM jenkins/jenkins:lts
+
+USER root
+
+RUN apt-get update && \
+    apt-get install -y sudo git curl && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+
+USER jenkins
+
