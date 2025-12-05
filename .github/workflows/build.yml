@@ -20,18 +20,18 @@ jobs:
 
     - name: Build DEB
       run: |
-        dpkg-deb --build debbuild countfiles.deb
-        ls -l
+        dpkg-deb --build debbuild/countfiles
+        ls -l debbuild
 
     - name: Build RPM
       run: |
         rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
-        ls -l
+        ls -l rpmbuild/RPMS
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: packages
         path: |
-          *.deb
+          debbuild/*.deb
           rpmbuild/RPMS/**/*.rpm
