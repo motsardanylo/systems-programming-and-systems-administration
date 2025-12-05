@@ -18,20 +18,20 @@ jobs:
         sudo apt update
         sudo apt install -y rpm dpkg-dev
 
+    - name: Copy sources
+      run: cp rpmbuild/SOURCES/* ~/rpmbuild/SOURCES/
+
     - name: Build DEB
       run: |
-        dpkg-deb --build debbuild/countfiles
-        ls -l debbuild
+        dpkg-deb --build debbuild countfiles.deb
 
     - name: Build RPM
-      run: |
-        rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
-        ls -l rpmbuild/RPMS
+      run: rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: packages
         path: |
-          debbuild/*.deb
-          rpmbuild/RPMS/**/*.rpm
+          *.deb
+          ~/rpmbuild/RPMS/**/*.rpm
