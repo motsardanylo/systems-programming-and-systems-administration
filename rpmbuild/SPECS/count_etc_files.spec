@@ -22,5 +22,5 @@ install -m 0755 %{SOURCE0} %{buildroot}/usr/local/bin/count_etc_files
 /usr/local/bin/count_etc_files
 
 %changelog
-* Mon Jan 01 2025 Danylo <danylomotsar@mail.com> 1.0-1
+* Fri Dtc 05 2025 Danylo <danylomotsar@mail.com> 1.0-1
 - Initial build
