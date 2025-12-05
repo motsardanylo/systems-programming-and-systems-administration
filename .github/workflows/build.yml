@@ -18,26 +18,20 @@ jobs:
         sudo apt update
         sudo apt install -y rpm dpkg-dev
 
-    - name: Prepare rpmbuild tree
-      run: |
-        mkdir -p ~/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
-        cp rpmbuild/SOURCES/* ~/rpmbuild/SOURCES/
-        cp rpmbuild/SPECS/* ~/rpmbuild/SPECS/
-
     - name: Build DEB
       run: |
-        dpkg-deb --build debbuild countfiles.deb
-        ls -l
+        dpkg-deb --build debbuild/countfiles
+        ls -l debbuild
 
     - name: Build RPM
       run: |
-        rpmbuild -bb ~/rpmbuild/SPECS/count_etc_files.spec
-        ls -l ~/rpmbuild/RPMS/
+        rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
+        ls -l rpmbuild/RPMS
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: packages
         path: |
-          *.deb
-          ~/rpmbuild/RPMS/**/*.rpm
+          debbuild/*.deb
+          rpmbuild/RPMS/**/*.rpm
