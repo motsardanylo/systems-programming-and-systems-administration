@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  jenkins-master:
+    build:
+      context: ./jenkins/master
+      dockerfile: Dockerfile
+    container_name: jenkins-master
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    restart: unless-stopped
+
+  jenkins-builder:
+    build:
+      context: ./jenkins/builder
+      dockerfile: Dockerfile
+    container_name: jenkins-builder
+    restart: "no"
+    environment:
+      - JENKINS_URL=http://jenkins-master:8080
+      - JENKINS_AGENT_NAME=builder1
+      - JENKINS_AGENT_SECRET=CHANGEME
+
+volumes:
+  jenkins_home:
