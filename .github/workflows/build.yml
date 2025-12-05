@@ -1,0 +1,37 @@
+name: Build RPM and DEB
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-packages:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Install build tools
+      run: |
+        sudo apt update
+        sudo apt install -y rpm dpkg-dev
+
+    - name: Build DEB
+      run: |
+        dpkg-deb --build debbuild countfiles.deb
+        ls -l
+
+    - name: Build RPM
+      run: |
+        rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
+        ls -l
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: packages
+        path: |
+          *.deb
+          rpmbuild/RPMS/**/*.rpm
