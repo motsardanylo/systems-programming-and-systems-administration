@@ -18,6 +18,15 @@ jobs:
         sudo apt update
         sudo apt install -y rpm dpkg-dev
 
+    # Prepare RPM build tree
+    - name: Prepare RPM sources
+      run: |
+        mkdir -p ~/rpmbuild/SOURCES
+        mkdir -p ~/rpmbuild/SPECS
+        # копируем spec и скрипт из репозитория в системный rpmbuild
+        cp rpmbuild/SPECS/count_etc_files.spec ~/rpmbuild/SPECS/
+        cp rpmbuild/SOURCES/count_etc_files.sh ~/rpmbuild/SOURCES/
+
     - name: Build DEB
       run: |
         dpkg-deb --build debbuild/countfiles
@@ -25,8 +34,8 @@ jobs:
 
     - name: Build RPM
       run: |
-        rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
-        ls -l rpmbuild/RPMS
+        rpmbuild -bb ~/rpmbuild/SPECS/count_etc_files.spec
+        ls -l ~/rpmbuild/RPMS
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -34,4 +43,4 @@ jobs:
         name: packages
         path: |
           debbuild/*.deb
-          rpmbuild/RPMS/**/*.rpm
+          ~/rpmbuild/RPMS/**/*.rpm
