@@ -5,7 +5,7 @@ Summary:        Script that counts files in /etc
 
 License:        GPL
 BuildArch:      noarch
-Source0:        count_etc_files.sh
+Source0:        %{_sourcedir}/count_etc_files.sh
 
 %description
 Simple script that counts files in /etc.
