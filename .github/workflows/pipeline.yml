@@ -17,15 +17,14 @@ jobs:
           dpkg-deb --build countfiles
           mv countfiles.deb count_etc_files.deb
 
-      - name: Build RPM
+    # Prepare RPM build tree
+      - name: Prepare RPM sources
         run: |
-          sudo apt-get update
-          sudo apt-get install -y rpm rpm2cpio cpio
-
-          mkdir -p rpmbuild/SOURCES
+          mkdir -p ~/rpmbuild/SOURCES
+          mkdir -p ~/rpmbuild/SPECS
+          # копируем spec и скрипт из репозитория в системный rpmbuild
+          cp rpmbuild/SPECS/count_etc_files.spec ~/rpmbuild/SPECS/
           cp rpmbuild/SOURCES/count_etc_files.sh ~/rpmbuild/SOURCES/
-
-          rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec --define "_topdir $HOME/rpmbuild"
 
       - name: Run in Debian Docker
         run: |
