@@ -20,8 +20,12 @@ jobs:
       - name: Build RPM
         run: |
           sudo apt-get update
-          sudo apt-get install -y rpm
-          rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
+          sudo apt-get install -y rpm rpm2cpio cpio
+
+          mkdir -p rpmbuild/SOURCES
+          cp rpmbuild/SOURCES/count_etc_files.sh ~/rpmbuild/SOURCES/
+
+          rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec --define "_topdir $HOME/rpmbuild"
 
       - name: Run in Debian Docker
         run: |
