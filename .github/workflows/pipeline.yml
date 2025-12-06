@@ -13,7 +13,7 @@ jobs:
       - name: Build DEB
         run: |
           cd debbuild
-          chmod +x countfiles/usr/local/bin/count_etc_files.sh
+          chmod +x countfiles/usr/local/bin/count_etc_files
           dpkg-deb --build countfiles
           mv countfiles.deb count_etc_files.deb
 
