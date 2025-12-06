@@ -1,0 +1,36 @@
+name: Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build DEB
+        run: |
+          cd debbuild
+          dpkg-deb --build count_etc_files
+
+      - name: Build RPM
+        run: |
+          sudo dnf install -y rpm-build
+          rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
+        continue-on-error: true
+
+      - name: Run in Debian Docker
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/mnt debian:latest bash -c "
+            apt-get update &&
+            apt-get install -y /mnt/debbuild/count_etc_files.deb &&
+            /usr/local/bin/count_etc_files
+          "
+
+      - name: Run in CentOS Docker
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/mnt centos:7 bash -c "
+            yum install -y /mnt/rpmbuild/RPMS/noarch/*.rpm &&
+            /usr/local/bin/count_etc_files
+          "
