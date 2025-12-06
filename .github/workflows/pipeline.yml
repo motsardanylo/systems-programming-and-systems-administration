@@ -6,19 +6,21 @@ on:
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
       - name: Build DEB
         run: |
           cd debbuild
-          dpkg-deb --build count_etc_files
+          chmod +x countfiles/usr/local/bin/count_etc_files.sh
+          dpkg-deb --build countfiles
+          mv countfiles.deb count_etc_files.deb
 
       - name: Build RPM
         run: |
           sudo dnf install -y rpm-build
           rpmbuild -bb rpmbuild/SPECS/count_etc_files.spec
-        continue-on-error: true
 
       - name: Run in Debian Docker
         run: |
